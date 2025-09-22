@@ -1,0 +1,7 @@
+fastapi_lab1_env/
+__pycache__/
+*.pyc
+*.pyo
+.env
+.vscode/
+.idea/
