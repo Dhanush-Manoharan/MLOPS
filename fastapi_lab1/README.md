@@ -50,24 +50,7 @@ cd MLOPS/fastapi_lab1
 
    
 ** Project Structure**
-fastapi_lab1/
-│
-├── src/                      # Source code
-│   ├── main.py              # FastAPI application and endpoints
-│   ├── data.py              # Data loading and preprocessing
-│   ├── train.py             # Model training pipeline
-│   └── predict.py           # Prediction logic
-│
-├── model/                    # Saved models and encoders
-│   ├── penguin_model.pkl    # Trained Random Forest model
-│   ├── scaler.pkl           # Feature scaler
-│   ├── species_encoder.pkl  # Label encoder for species
-│   └── metrics.json         # Model performance metrics
-│
-├── assets/                   # Screenshots and documentation
-├── requirements.txt          # Python dependencies
-├── penguins.csv             # Dataset
-└── README.md                # This file
+<img width="341" height="217" alt="image" src="https://github.com/user-attachments/assets/7aa98c45-3aa1-461b-9ee5-6657f815b9d4" />
 
 **Model Information**
 Algorithm
@@ -171,3 +154,4 @@ This project is submitted as part of IE 7374 MLOps coursework.
 
 
 For questions or issues, please contact: manoharan.d@northeastern.edu
+
