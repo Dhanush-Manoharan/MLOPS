@@ -3,7 +3,7 @@
 **Course**: IE 7374 MLOps  
 **Student**: Dhanush Manoharan  
 **Professor**: Ramin Mohammadi  
-**Semester**: Fall 2024  
+**Semester**: Fall 2025  
 **Project**: FastAPI Lab 1 - Machine Learning Model Deployment
 
 ##  Project Overview
@@ -154,4 +154,5 @@ This project is submitted as part of IE 7374 MLOps coursework.
 
 
 For questions or issues, please contact: manoharan.d@northeastern.edu
+
 
