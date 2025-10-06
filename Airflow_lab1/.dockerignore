@@ -1,0 +1,6 @@
+__pycache__/
+*.pyc
+logs/
+working_data/
+.docker/
+.git
