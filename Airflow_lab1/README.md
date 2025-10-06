@@ -125,15 +125,10 @@ docker compose logs -f webserver
    Reloads model, predicts for one sample, detects elbow with KneeLocator, returns a friendly summary string.
 
 # Tech
+Apache Airflow (webserver, scheduler, worker, triggerer)
+PostgreSQL (metadata DB) & Redis (Celery broker)
+Python: pandas, scikit-learn, kneed, joblib/pickle
 
-# Apache Airflow (webserver, scheduler, worker, triggerer)
-
-# PostgreSQL (metadata DB) & Redis (Celery broker)
-
-# Python: pandas, scikit-learn, kneed, joblib/pickle
-
-# Docs:
-
-# Airflow: https://airflow.apache.org/
-
-# Airflow Docker Compose guide: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html
+Docs:
+Airflow: https://airflow.apache.org/
+Airflow Docker Compose guide: https://airflow.apache.org/docs/apache-airflow/stable/howto/docker-compose/index.html
