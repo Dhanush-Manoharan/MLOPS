@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Penguin Species Classification</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 500px;
+            width: 100%;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        button {
+            flex: 1;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        #predictBtn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        #predictBtn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        #clearBtn {
+            background: #f44336;
+            color: white;
+        }
+        #clearBtn:hover {
+            background: #da190b;
+            transform: translateY(-2px);
+        }
+        #result {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        #result.show {
+            display: block;
+        }
+        .result-success {
+            background: #e8f5e9;
+            border: 2px solid #4caf50;
+        }
+        .result-error {
+            background: #ffebee;
+            border: 2px solid #f44336;
+        }
+        .species-name {
+            font-size: 32px;
+            font-weight: bold;
+            color: #4caf50;
+            margin: 10px 0;
+        }
+        .confidence {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 15px;
+        }
+        .probabilities {
+            text-align: left;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid #ddd;
+        }
+        .prob-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+            font-size: 14px;
+        }
+        .prob-bar {
+            flex: 1;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+        .prob-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.5s ease;
+        }
+        .loading {
+            text-align: center;
+            color: #667eea;
+            font-size: 16px;
+        }
+        .example-values {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #666;
+        }
+        .example-values strong {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🐧 Penguin Species Classifier</h1>
+        <p class="subtitle">Enter penguin measurements to predict the species</p>
+
+        <div class="example-values">
+            <strong>Example ranges:</strong><br>
+            Bill Length: 32-60mm | Bill Depth: 13-22mm<br>
+            Flipper: 170-230mm | Body Mass: 2700-6300g
+        </div>
+
+        <form id="predictionForm">
+            <div class="form-group">
+                <label for="bill_length">Bill Length (mm)</label>
+                <input type="number" id="bill_length" name="bill_length" step="0.1" required 
+                       placeholder="e.g., 39.1">
+            </div>
+
+            <div class="form-group">
+                <label for="bill_depth">Bill Depth (mm)</label>
+                <input type="number" id="bill_depth" name="bill_depth" step="0.1" required 
+                       placeholder="e.g., 18.7">
+            </div>
+
+            <div class="form-group">
+                <label for="flipper_length">Flipper Length (mm)</label>
+                <input type="number" id="flipper_length" name="flipper_length" step="0.1" required 
+                       placeholder="e.g., 181">
+            </div>
+
+            <div class="form-group">
+                <label for="body_mass">Body Mass (g)</label>
+                <input type="number" id="body_mass" name="body_mass" step="1" required 
+                       placeholder="e.g., 3750">
+            </div>
+
+            <div class="button-group">
+                <button type="submit" id="predictBtn">Predict Species</button>
+                <button type="button" id="clearBtn">Clear</button>
+            </div>
+        </form>
+
+        <div id="result"></div>
+    </div>
+
+    <script>
+        const form = document.getElementById('predictionForm');
+        const resultDiv = document.getElementById('result');
+        const clearBtn = document.getElementById('clearBtn');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            resultDiv.className = '';
+            resultDiv.innerHTML = '<div class="loading">🔄 Predicting...</div>';
+            resultDiv.classList.add('show');
+
+            const formData = new FormData(form);
+
+            try {
+                const response = await fetch('/predict', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    resultDiv.className = 'result-error show';
+                    resultDiv.innerHTML = `<strong>Error:</strong> ${data.error}`;
+                } else {
+                    const confidence = (data.confidence * 100).toFixed(2);
+                    
+                    let probsHTML = '<div class="probabilities"><strong>All Probabilities:</strong>';
+                    for (const [species, prob] of Object.entries(data.probabilities)) {
+                        const percentage = (prob * 100).toFixed(1);
+                        probsHTML += `
+                            <div class="prob-item">
+                                <span>${species}:</span>
+                                <div class="prob-bar">
+                                    <div class="prob-fill" style="width: ${percentage}%"></div>
+                                </div>
+                                <span>${percentage}%</span>
+                            </div>
+                        `;
+                    }
+                    probsHTML += '</div>';
+
+                    resultDiv.className = 'result-success show';
+                    resultDiv.innerHTML = `
+                        <div class="species-name">🐧 ${data.species}</div>
+                        <div class="confidence">Confidence: ${confidence}%</div>
+                        ${probsHTML}
+                    `;
+                }
+            } catch (error) {
+                resultDiv.className = 'result-error show';
+                resultDiv.innerHTML = `<strong>Error:</strong> ${error.message}`;
+            }
+        });
+
+        clearBtn.addEventListener('click', () => {
+            form.reset();
+            resultDiv.classList.remove('show');
+            resultDiv.innerHTML = '';
+        });
+    </script>
+</body>
+</html>

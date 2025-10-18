@@ -1,88 +1,118 @@
+import os
+import pickle
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.cluster import KMeans
 from kneed import KneeLocator
-import pickle
-import os
 
 
-def load_data():
+# ---------- 1) Load data ----------
+
+def load_data(source_path: str = "/opt/airflow/data/bank-full.csv") -> bytes:
     """
-    Loads data from a CSV file, serializes it, and returns the serialized data.
+    Load the raw dataset and return it serialized (bytes) for XCom.
+    Bank Marketing data uses ';' as the delimiter.
 
     Returns:
-        bytes: Serialized data.
+        bytes: pickled pandas DataFrame
     """
+    df = pd.read_csv(source_path, sep=";")
+    return pickle.dumps(df)
 
-    df = pd.read_csv(os.path.join(os.path.dirname(__file__), "../data/file.csv"))
-    serialized_data = pickle.dumps(df)
-    
-    return serialized_data
-    
 
-def data_preprocessing(data):
+# ---------- 2) Preprocess ----------
 
+def data_preprocessing(data: bytes) -> bytes:
     """
-    Deserializes data, performs data preprocessing, and returns serialized clustered data.
+    Deserialize the DataFrame, select numeric features, drop NAs,
+    MinMax-scale, and return the scaled array serialized.
 
     Args:
-        data (bytes): Serialized data to be deserialized and processed.
+        data: pickled pandas DataFrame
 
     Returns:
-        bytes: Serialized clustered data.
+        bytes: pickled numpy array (scaled features)
     """
-    df = pickle.loads(data)
-    df = df.dropna()
-    clustering_data = df[["BALANCE", "PURCHASES", "CREDIT_LIMIT"]]
-    min_max_scaler = MinMaxScaler()
-    clustering_data_minmax = min_max_scaler.fit_transform(clustering_data)
-    clustering_serialized_data = pickle.dumps(clustering_data_minmax)
-    return clustering_serialized_data
+    df: pd.DataFrame = pickle.loads(data)
+
+    # numeric-only features; simple NA handling
+    X = df.select_dtypes(include=["number"]).dropna()
+    scaler = MinMaxScaler()
+    X_scaled = scaler.fit_transform(X)
+
+    return pickle.dumps(X_scaled)
 
 
-def build_save_model(data, filename):
+# ---------- 3) Train & save model ----------
+
+def build_save_model(data: bytes,
+                     filename: str = "/opt/airflow/working_data/model_bank.sav",
+                     k_min: int = 2,
+                     k_max: int = 15) -> list:
     """
-    Builds a KMeans clustering model, saves it to a file, and returns SSE values.
+    Fit KMeans for a range of k to compute SSE, and save the last trained model.
+    Ensures the output directory exists before writing.
 
     Args:
-        data (bytes): Serialized data for clustering.
-        filename (str): Name of the file to save the clustering model.
+        data: pickled numpy array (scaled features)
+        filename: where to save the model
+        k_min, k_max: inclusive k range for SSE curve
 
     Returns:
-        list: List of SSE (Sum of Squared Errors) values for different numbers of clusters.
+        list: SSE values for k in [k_min, k_max]
     """
-    df = pickle.loads(data)
-    kmeans_kwargs = {"init": "random","n_init": 10,"max_iter": 300,"random_state": 42,}
+    X = pickle.loads(data)
+
+    # KMeans kwargs chosen for stability
+    km_args = dict(init="random", n_init=10, max_iter=300, random_state=42)
     sse = []
-    for k in range(1, 50):
-        kmeans = KMeans(n_clusters=k, **kmeans_kwargs)
-        kmeans.fit(df)
-        sse.append(kmeans.inertia_)
 
-    pickle.dump(kmeans, open(filename, 'wb'))
+    for k in range(k_min, k_max + 1):
+        km = KMeans(n_clusters=k, **km_args)
+        km.fit(X)
+        sse.append(km.inertia_)
+
+    # ensure output dir is writable and exists
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    with open(filename, "wb") as f:
+        pickle.dump(km, f)
 
     return sse
 
 
-def load_model_elbow(filename,sse):
+# ---------- 4) Load model & elbow ----------
+
+def load_model_elbow(filename: str,
+                     sse: list,
+                     source_path: str = "/opt/airflow/data/bank-full.csv") -> str:
     """
-    Loads a saved KMeans clustering model and determines the number of clusters using the elbow method.
+    Load the saved model, recompute preprocessing on the dataset,
+    predict a cluster for the first row, and compute the elbow k.
 
     Args:
-        filename (str): Name of the file containing the saved clustering model.
-        sse (list): List of SSE values for different numbers of clusters.
+        filename: path to saved KMeans
+        sse: SSE list (output from build_save_model)
+        source_path: dataset path (used to build a sample to predict)
 
     Returns:
-        str: A string indicating the predicted cluster and the number of clusters based on the elbow method.
+        str: "Cluster X Number of clusters Y"
     """
+    # load model
+    with open(filename, "rb") as f:
+        model: KMeans = pickle.load(f)
 
-    loaded_model = pickle.load(open(filename, 'rb'))
-    df = pd.read_csv(os.path.join(os.path.dirname(__file__), "../data/test.csv"))
-    
-    kl = KneeLocator(
-        range(1, 50), sse, curve="convex", direction="decreasing"
-    )
+    # rebuild the same preprocessing for a prediction sample
+    df = pd.read_csv(source_path, sep=";")
+    X = df.select_dtypes(include=["number"]).dropna()
+    X_scaled = MinMaxScaler().fit_transform(X)
 
-    return "Cluster " + str(loaded_model.predict(df)[0]) +" Number of clusters "+str(kl.elbow)
+    # take the first row as a small demo prediction
+    sample = X_scaled[:1]
+    pred = model.predict(sample)[0]
 
+    # elbow from SSE
+    k_range = list(range(2, 2 + len(sse)))  # matches k_min..k_max used above
+    kl = KneeLocator(k_range, sse, curve="convex", direction="decreasing")
+    elbow_k = kl.elbow if kl.elbow is not None else k_range[-1]
 
+    return f"Cluster {pred} Number of clusters {elbow_k}"
