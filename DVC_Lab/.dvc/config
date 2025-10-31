@@ -1,0 +1,5 @@
+[core]
+    remote = myremote
+['remote "myremote"']
+    url = gs://dhanushlab
+    credentialpath = C:\Users\dhanu\OneDrive\Documents\mlopslab-476800-7644e65fe0c6.json
