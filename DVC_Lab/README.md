@@ -134,7 +134,3 @@ This lab successfully demonstrated:
 * Data versioning using **DVC**
 * Remote storage integration with **Google Cloud**
 * Version tracking, updating, and restoring datasets with hash-based referencing
-
----
-
-Would you like me to add a short **“Credits” or “Author”** section at the end (e.g., *Created by Dhanush Manoharan — Northeastern University, MLOps Lab Course*)?
