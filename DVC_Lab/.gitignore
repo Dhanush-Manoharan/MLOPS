@@ -1,0 +1,67 @@
+# -------------------------
+# Python & Virtual Environment
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+dvc/
+dvc_env/
+*.env
+*.venv
+*.egg-info/
+
+# -------------------------
+# DVC & Data Cache
+# -------------------------
+# DVC cache and temp files
+.dvc/cache/
+.dvc/tmp/
+*.dvc.lock
+
+# -------------------------
+# Jupyter Notebooks Checkpoints
+# -------------------------
+.ipynb_checkpoints/
+
+# -------------------------
+# VS Code & System Files
+# -------------------------
+.vscode/
+.settings/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# -------------------------
+# Logs & Outputs
+# -------------------------
+*.log
+*.out
+*.bak
+
+# -------------------------
+# Credentials & Config Files
+# -------------------------
+*.json
+*.key
+*.pem
+*.crt
+*.config
+
+# -------------------------
+# Build or Temporary Artifacts
+# -------------------------
+build/
+dist/
+*.spec
+*.tmp
+*.zip
+*.tar.gz
