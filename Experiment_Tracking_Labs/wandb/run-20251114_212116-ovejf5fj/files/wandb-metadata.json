@@ -1,0 +1,38 @@
+{
+  "os": "Windows-10-10.0.26200-SP0",
+  "python": "CPython 3.11.9",
+  "startedAt": "2025-11-15T02:21:16.162590Z",
+  "program": "Untitled-1.ipynb",
+  "git": {
+    "remote": "https://github.com/Dhanush-Manoharan/MLOPS.git",
+    "commit": "04ef1e4e9d58a5b00db189ec71303b6fbb77eba9"
+  },
+  "email": "dhanushmanoharan2801@gmail.com",
+  "root": "c:\\MLOPS",
+  "host": "DHANUSH_PC",
+  "executable": "c:\\Users\\dhanu\\AppData\\Local\\Programs\\Python\\Python311\\python.exe",
+  "cpu_count": 20,
+  "cpu_count_logical": 28,
+  "gpu": "NVIDIA GeForce RTX 4060 Laptop GPU",
+  "gpu_count": 1,
+  "disk": {
+    "/": {
+      "total": "1020361961472",
+      "used": "638466801664"
+    }
+  },
+  "memory": {
+    "total": "16873545728"
+  },
+  "gpu_nvidia": [
+    {
+      "name": "NVIDIA GeForce RTX 4060 Laptop GPU",
+      "memoryTotal": "8585740288",
+      "cudaCores": 3072,
+      "architecture": "Ada",
+      "uuid": "GPU-c7b52a7c-f78d-c83c-24a1-d77d1a72e7bc"
+    }
+  ],
+  "cudaVersion": "13.0",
+  "writerId": "knc59lbx7o14l6lv7r61uu6wxtfb6tiu"
+}

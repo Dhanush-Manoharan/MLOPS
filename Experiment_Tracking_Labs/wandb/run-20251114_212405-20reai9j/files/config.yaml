@@ -1,0 +1,91 @@
+_wandb:
+    value:
+        cli_version: 0.23.0
+        e:
+            dy67mo1qr6ajszadg5mchjgwnvhls5yi:
+                cpu_count: 20
+                cpu_count_logical: 28
+                cudaVersion: "13.0"
+                disk:
+                    /:
+                        total: "1020361961472"
+                        used: "638456369152"
+                email: dhanushmanoharan2801@gmail.com
+                executable: c:\Users\dhanu\AppData\Local\Programs\Python\Python311\python.exe
+                git:
+                    commit: 04ef1e4e9d58a5b00db189ec71303b6fbb77eba9
+                    remote: https://github.com/Dhanush-Manoharan/MLOPS.git
+                gpu: NVIDIA GeForce RTX 4060 Laptop GPU
+                gpu_count: 1
+                gpu_nvidia:
+                    - architecture: Ada
+                      cudaCores: 3072
+                      memoryTotal: "8585740288"
+                      name: NVIDIA GeForce RTX 4060 Laptop GPU
+                      uuid: GPU-c7b52a7c-f78d-c83c-24a1-d77d1a72e7bc
+                host: DHANUSH_PC
+                memory:
+                    total: "16873545728"
+                os: Windows-10-10.0.26200-SP0
+                program: Untitled-1.ipynb
+                python: CPython 3.11.9
+                root: c:\MLOPS
+                startedAt: "2025-11-15T02:24:05.198435Z"
+                writerId: dy67mo1qr6ajszadg5mchjgwnvhls5yi
+        m: []
+        python_version: 3.11.9
+        t:
+            "1":
+                - 2
+                - 3
+            "2":
+                - 2
+                - 3
+            "3":
+                - 2
+                - 13
+                - 16
+            "4": 3.11.9
+            "5": 0.23.0
+            "8":
+                - 1
+                - 3
+            "12": 0.23.0
+            "13": windows-amd64
+        visualize:
+            confusion_matrix:
+                panel_config:
+                    fieldSettings:
+                        Actual: Actual
+                        Predicted: Predicted
+                        nPredictions: nPredictions
+                    panelDefId: wandb/confusion_matrix/v1
+                    stringSettings:
+                        title: Confusion Matrix Curve
+                    transform:
+                        name: tableWithLeafColNames
+                    userQuery:
+                        queryFields:
+                            - args:
+                                - name: runSets
+                                  value: ${runSets}
+                              fields:
+                                - fields: []
+                                  name: id
+                                - fields: []
+                                  name: name
+                                - fields: []
+                                  name: _defaultColorIndex
+                                - args:
+                                    - name: tableKey
+                                      value: confusion_matrix_table
+                                  fields: []
+                                  name: summaryTable
+                              name: runSets
+                panel_type: Vega2
+batch_size:
+    value: 128
+epochs:
+    value: 5
+sample:
+    value: 20000
